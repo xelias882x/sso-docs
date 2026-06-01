@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSO Microsoft — Apresentação Executiva</title>
+<style>
+  :root {
+    --ms-blue: #0078d4;
+    --ms-blue-dark: #005a9e;
+    --ms-blue-light: #deecf9;
+    --ms-blue-mid: #106ebe;
+    --ms-green: #107c10;
+    --ms-green-light: #dff6dd;
+    --ms-red: #c50f1f;
+    --ms-red-light: #fde7e9;
+    --ms-orange: #d83b01;
+    --ms-orange-light: #fff4ce;
+    --ms-gray-dark: #201f1e;
+    --ms-gray: #605e5c;
+    --ms-gray-light: #f3f2f1;
+    --ms-white: #ffffff;
+    --slide-max: 1100px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f0f0f0;
+    color: var(--ms-gray-dark);
+    line-height: 1.5;
+  }
+
+  /* ── NAV ── */
+  .toc {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ms-blue-dark);
+    display: flex; align-items: center; gap: 4px;
+    padding: 0 16px; height: 44px; overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .toc a {
+    color: rgba(255,255,255,.85); text-decoration: none;
+    font-size: 12px; font-weight: 500; padding: 6px 10px;
+    border-radius: 4px; white-space: nowrap;
+    transition: background .15s;
+  }
+  .toc a:hover { background: rgba(255,255,255,.15); color: #fff; }
+  .toc-brand { color: #fff; font-weight: 700; font-size: 14px; margin-right: 12px; white-space: nowrap; }
+
+  /* ── SLIDES ── */
+  .slide {
+    max-width: var(--slide-max);
+    margin: 60px auto 0;
+    background: var(--ms-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    overflow: hidden;
+    page-break-after: always;
+  }
+  .slide + .slide { margin-top: 24px; }
+  .slide:last-child { margin-bottom: 40px; }
+
+  .slide-header {
+    padding: 28px 40px 20px;
+    border-left: 6px solid var(--ms-blue);
+  }
+  .slide-header.cover {
+    background: linear-gradient(135deg, var(--ms-blue-dark) 0%, var(--ms-blue) 60%, #50a9e2 100%);
+    border-left: none; padding: 56px 48px;
+  }
+  .slide-header.cover h1 { color: #fff; font-size: 38px; font-weight: 300; line-height: 1.2; }
+  .slide-header.cover h1 strong { font-weight: 700; display: block; font-size: 44px; margin-bottom: 6px; }
+  .slide-header.cover .subtitle { color: rgba(255,255,255,.85); font-size: 18px; margin-top: 12px; }
+  .slide-header.cover .meta { color: rgba(255,255,255,.7); font-size: 13px; margin-top: 28px; }
+  .slide-header.cover .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.2); color: #fff;
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600;
+    margin-top: 16px;
+  }
+  .slide-number {
+    font-size: 11px; font-weight: 600; color: var(--ms-blue);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .slide-header h2 { font-size: 28px; font-weight: 600; color: var(--ms-gray-dark); }
+  .slide-header p { color: var(--ms-gray); font-size: 14px; margin-top: 6px; }
+
+  .slide-body { padding: 24px 40px 36px; }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--ms-gray-light); border-radius: 6px;
+    padding: 20px; border-top: 3px solid var(--ms-blue);
+  }
+  .card.green { border-top-color: var(--ms-green); }
+  .card.orange { border-top-color: var(--ms-orange); }
+  .card.red { border-top-color: var(--ms-red); }
+  .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .card p, .card li { font-size: 13.5px; color: var(--ms-gray); line-height: 1.6; }
+  .card ul { padding-left: 18px; }
+  .card .icon { font-size: 28px; margin-bottom: 10px; display: block; }
+
+  /* ── STATS ── */
+  .stat-box {
+    text-align: center; padding: 24px 16px;
+    background: var(--ms-blue-light); border-radius: 8px;
+  }
+  .stat-box .num { font-size: 42px; font-weight: 700; color: var(--ms-blue); line-height: 1; }
+  .stat-box .label { font-size: 13px; color: var(--ms-gray); margin-top: 6px; font-weight: 500; }
+
+  /* ── BADGE / PILL ── */
+  .pill {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 11.5px; font-weight: 600;
+  }
+  .pill.green { background: var(--ms-green-light); color: var(--ms-green); }
+  .pill.red { background: var(--ms-red-light); color: var(--ms-red); }
+  .pill.blue { background: var(--ms-blue-light); color: var(--ms-blue-dark); }
+  .pill.orange { background: var(--ms-orange-light); color: var(--ms-orange); }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead tr { background: var(--ms-blue); color: #fff; }
+  thead th { padding: 10px 14px; text-align: left; font-weight: 600; font-size: 13px; }
+  tbody tr:nth-child(even) { background: var(--ms-gray-light); }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #e0e0e0; }
+  tbody tr:last-child td { border-bottom: none; }
+  .check { color: var(--ms-green); font-weight: 700; }
+  .cross { color: var(--ms-red); font-weight: 700; }
+
+  /* ── FLOW DIAGRAMS (SVG-based) ── */
+  .diagram-wrapper {
+    background: var(--ms-gray-light);
+    border-radius: 8px; padding: 24px;
+    margin-top: 4px;
+    overflow-x: auto;
+  }
+  svg text { font-family: 'Segoe UI', sans-serif; }
+
+  /* ── SECURITY LAYERS ── */
+  .layer-stack { display: flex; flex-direction: column; gap: 6px; }
+  .layer {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 20px; border-radius: 6px;
+    background: linear-gradient(90deg, #fff 0%, var(--ms-gray-light) 100%);
+    border-left: 4px solid var(--ms-blue);
+    font-size: 13.5px;
+  }
+  .layer .layer-label {
+    font-weight: 700; width: 190px; flex-shrink: 0; color: var(--ms-blue-dark); font-size: 12px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .layer .layer-items { color: var(--ms-gray); flex: 1; }
+  .layer.l1 { border-color: #0078d4; }
+  .layer.l2 { border-color: #106ebe; }
+  .layer.l3 { border-color: #2b88d8; }
+  .layer.l4 { border-color: #71afe5; }
+  .layer.l5 { border-color: var(--ms-green); }
+  .layer.l6 { border-color: var(--ms-orange); }
+
+  /* ── TIMELINE / FLOW STEPS ── */
+  .flow-steps { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 14px 0;
+    border-left: 2px solid var(--ms-blue-light);
+    padding-left: 24px;
+    position: relative;
+  }
+  .flow-step::before {
+    content: attr(data-n);
+    position: absolute; left: -14px; top: 14px;
+    background: var(--ms-blue); color: #fff;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .flow-step.denied::before { background: var(--ms-red); }
+  .flow-step.allowed::before { background: var(--ms-green); }
+  .flow-step h4 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .flow-step p { font-size: 13px; color: var(--ms-gray); }
+  .flow-outcome {
+    margin-top: 8px; padding: 10px 18px;
+    border-radius: 6px; font-size: 13.5px; font-weight: 600;
+  }
+  .flow-outcome.ok { background: var(--ms-green-light); color: var(--ms-green); }
+  .flow-outcome.fail { background: var(--ms-red-light); color: var(--ms-red); }
+
+  /* ── COMPARISON ── */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .compare-col h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding: 10px 14px; border-radius: 6px; }
+  .compare-col.before h3 { background: var(--ms-red-light); color: var(--ms-red); }
+  .compare-col.after h3 { background: var(--ms-green-light); color: var(--ms-green); }
+  .compare-col li { font-size: 13.5px; color: var(--ms-gray); padding: 6px 0; border-bottom: 1px solid #eee; list-style: none; padding-left: 24px; position: relative; }
+  .compare-col.before li::before { content: "✗"; position: absolute; left: 4px; color: var(--ms-red); font-weight: 700; }
+  .compare-col.after li::before { content: "✓"; position: absolute; left: 4px; color: var(--ms-green); font-weight: 700; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #1e1e1e; color: #d4d4d4;
+    border-radius: 6px; padding: 16px 20px;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 12.5px; overflow-x: auto; line-height: 1.6;
+  }
+  .code-block .kw { color: #569cd6; }
+  .code-block .str { color: #ce9178; }
+  .code-block .cm { color: #6a9955; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    padding: 14px 18px; border-radius: 6px;
+    border-left: 4px solid; font-size: 13.5px;
+    margin: 16px 0;
+  }
+  .callout.info { background: var(--ms-blue-light); border-color: var(--ms-blue); color: var(--ms-blue-dark); }
+  .callout.success { background: var(--ms-green-light); border-color: var(--ms-green); color: #054b02; }
+  .callout.warning { background: var(--ms-orange-light); border-color: var(--ms-orange); color: #7a1d00; }
+
+  /* ── LOGO AREA ── */
+  .ms-logo {
+    display: inline-flex; gap: 3px; flex-wrap: wrap;
+    width: 32px; height: 32px;
+  }
+  .ms-logo span { width: 14px; height: 14px; border-radius: 1px; }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch-row { display: flex; align-items: center; gap: 0; margin: 8px 0; }
+  .arch-box {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px 18px; border-radius: 6px; min-width: 140px;
+    text-align: center; font-size: 12.5px; font-weight: 600; gap: 4px;
+  }
+  .arch-box .ab-icon { font-size: 24px; }
+  .arch-arrow {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    font-size: 11px; color: var(--ms-gray); padding: 0 4px;
+  }
+  .arch-arrow .arr-line {
+    width: 100%; height: 2px; background: #ccc; position: relative;
+  }
+  .arch-arrow .arr-line::after {
+    content: '▶'; position: absolute; right: -6px; top: -8px;
+    color: #999; font-size: 12px;
+  }
+  .arch-arrow .arr-label { font-size: 10px; color: #888; margin-top: 3px; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    max-width: var(--slide-max); margin: 36px auto 0;
+    text-align: center; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: #aaa;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: #ddd;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .toc { display: none; }
+    body { background: #fff; }
+    .slide { margin: 0; box-shadow: none; border-radius: 0; page-break-after: always; }
+    .slide + .slide { margin: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .grid-2, .grid-3, .grid-4, .compare { grid-template-columns: 1fr; }
+    .slide-body, .slide-header { padding-left: 20px; padding-right: 20px; }
+    .slide-header.cover { padding: 36px 24px; }
+    .slide-header.cover h1 strong { font-size: 30px; }
+    .layer { flex-direction: column; gap: 4px; }
+    .layer .layer-label { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════  NAV  ══════════════════════ -->
+<nav class="toc">
+  <span class="toc-brand">🔐 SSO Microsoft</span>
+  <a href="#slide-capa">Início</a>
+  <a href="#slide-oque">O que é SSO</a>
+  <a href="#slide-quem">Quem Usa</a>
+  <a href="#slide-vantagens">Vantagens</a>
+  <a href="#slide-arquitetura">Arquitetura</a>
+  <a href="#slide-fluxo">Fluxo</a>
+  <a href="#slide-fluxos3">Cenários</a>
+  <a href="#slide-seguranca">Segurança</a>
+  <a href="#slide-camadas">Camadas</a>
+  <a href="#slide-multitenancy">Multi-empresa</a>
+  <a href="#slide-producao">Produção</a>
+  <a href="#slide-proximos">Próximos Passos</a>
+</nav>
+
+<!-- ══════════════════════  SLIDE 1 — CAPA  ══════════════════════ -->
+<div class="slide" id="slide-capa">
+  <div class="slide-header cover">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:20px;">
+      <div>
+        <h1><strong>SSO Microsoft</strong>Autenticação Corporativa Segura</h1>
+        <p class="subtitle">Login único com conta Microsoft — sem senhas adicionais, sem riscos</p>
+        <div class="badge">✅ Validado em produção — 31/05/2026</div>
+        <p class="meta">IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; Apresentação Técnica Executiva</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:right;">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <rect x="10" y="10" width="48" height="48" rx="4" fill="#f25022"/>
+          <rect x="62" y="10" width="48" height="48" rx="4" fill="#7fba00"/>
+          <rect x="10" y="62" width="48" height="48" rx="4" fill="#00a4ef"/>
+          <rect x="62" y="62" width="48" height="48" rx="4" fill="#ffb900"/>
+        </svg>
+        <p style="color:rgba(255,255,255,.7); font-size:11px;">Microsoft Identity Platform v2.0</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 2 — O QUE É SSO  ══════════════════════ -->
+<div class="slide" id="slide-oque">
+  <div class="slide-header">
+    <div class="slide-number">Slide 01 · Conceito</div>
+    <h2>O que é SSO?</h2>
+    <p>Single Sign-On — Um único login corporativo para todos os sistemas</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div class="compare">
+          <div class="compare-col before">
+            <h3>🔴 Sem SSO</h3>
+            <ul>
+              <li>Senha nova para cada sistema</li>
+              <li>Usuário lembra 5–10 senhas</li>
+              <li>TI gerencia contas duplicadas</li>
+              <li>Acesso não revogado ao demitir</li>
+              <li>Senhas fracas / reaproveitadas</li>
+              <li>Suporte: "esqueci minha senha"</li>
+            </ul>
+          </div>
+          <div class="compare-col after">
+            <h3>🟢 Com SSO</h3>
+            <ul>
+              <li>Uma conta Microsoft para tudo</li>
+              <li>Login automático nos sistemas</li>
+              <li>TI gerencia no Azure AD</li>
+              <li>Demissão revoga tudo de uma vez</li>
+              <li>Senha forte do M365 (MFA)</li>
+              <li>Zero chamados de senha</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout info" style="margin-bottom:16px;">
+          <strong>Definição simples:</strong> O usuário faz login uma única vez com a conta da empresa (Microsoft 365) e o sistema confirma a identidade sem pedir nova senha.
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+          <span class="icon">🔑</span>
+          <h3>Protocolo: OAuth 2.0 + PKCE</h3>
+          <p>Padrão internacional adotado por Microsoft, Google, Apple. A senha <strong>nunca trafega</strong> no sistema — apenas tokens assinados.</p>
+        </div>
+        <div class="card green">
+          <span class="icon">🛡️</span>
+          <h3>Quem garante a identidade?</h3>
+          <p>A <strong>Microsoft</strong>. Seu sistema recebe confirmação criptográfica assinada pelo Azure Active Directory.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 3 — QUEM USA  ══════════════════════ -->
+<div class="slide" id="slide-quem">
+  <div class="slide-header">
+    <div class="slide-number">Slide 02 · Casos de Uso</div>
+    <h2>Quem usa SSO?</h2>
+    <p>Perfis de usuário e cenários empresariais atendidos por este projeto</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3">
+      <div class="card">
+        <span class="icon">🏢</span>
+        <h3>Funcionários Internos</h3>
+        <p>Colaboradores com conta <strong>@ik.com.br</strong> que precisam acessar portais internos, dashboards e sistemas com login corporativo.</p>
+        <br>
+        <p><span class="pill green">✓ Acesso imediato</span></p>
+      </div>
+      <div class="card green">
+        <span class="icon">🤝</span>
+        <h3>Empresas Parceiras</h3>
+        <p>Fornecedores, clientes ou parceiros como a <strong>Tegma</strong> que precisam acessar portais compartilhados usando a conta Microsoft da empresa deles.</p>
+        <br>
+        <p><span class="pill green">✓ Autorizado por tenant</span></p>
+      </div>
+      <div class="card orange">
+        <span class="icon">🤖</span>
+        <h3>Bot Microsoft Teams</h3>
+        <p>Assistentes virtuais no Teams que precisam identificar o usuário sem exigir um segundo login — SSO direto pelo ambiente Teams.</p>
+        <br>
+        <p><span class="pill blue">Modo Bot Framework</span></p>
+      </div>
+      <div class="card">
+        <span class="icon">📊</span>
+        <h3>Sistemas SaaS Internos</h3>
+        <p>Aplicações web proprietárias que precisam controlar acesso por empresa, cargo ou departamento, lendo atributos do Azure AD.</p>
+        <br>
+        <p><span class="pill blue">Multi-empresa</span></p>
+      </div>
+      <div class="card">
+        <span class="icon">🌐</span>
+        <h3>Portais de Clientes</h3>
+        <p>Portais B2B onde cada cliente acessa com a conta Microsoft de sua própria empresa. Cada organização mantém controle total dos seus usuários.</p>
+        <br>
+        <p><span class="pill blue">Multi-tenant</span></p>
+      </div>
+      <div class="card red">
+        <span class="icon">🚫</span>
+        <h3>Contas Bloqueadas</h3>
+        <p>Contas pessoais (<strong>@gmail.com</strong>, <strong>@hotmail.com</strong>) são bloqueadas automaticamente pela Microsoft antes mesmo de chegar ao sistema.</p>
+        <br>
+        <p><span class="pill red">✗ Bloqueado na Microsoft</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 4 — VANTAGENS  ══════════════════════ -->
+<div class="slide" id="slide-vantagens">
+  <div class="slide-header">
+    <div class="slide-number">Slide 03 · Valor de Negócio</div>
+    <h2>Vantagens do SSO</h2>
+    <p>Benefícios para o negócio, TI e usuários finais</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="stat-box">
+        <div class="num">0</div>
+        <div class="label">Senhas extras criadas pelos usuários</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">8h</div>
+        <div class="label">Duração da sessão sem novo login</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">9</div>
+        <div class="label">Vulnerabilidades corrigidas e validadas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">3</div>
+        <div class="label">Fluxos testados e aprovados em produção</div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div>
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; color:var(--ms-blue);">👤 Para o Usuário</h3>
+        <div class="flow-steps">
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Um login para todos os sistemas</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Não precisa lembrar mais senhas</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Sessão de 8h sem reautenticar</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Login via tela confiável da Microsoft</div>
+          <div style="padding:8px 0; font-size:13.5px; color:var(--ms-gray);">✅ MFA já aplicado pelo M365</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; color:var(--ms-green);">🔧 Para o TI</h3>
+        <div class="flow-steps">
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Uma fonte de verdade: Azure AD</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Demissão revoga acesso em todos os sistemas</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Sem banco de usuários para manter</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Controle por empresa (whitelist)</div>
+          <div style="padding:8px 0; font-size:13.5px; color:var(--ms-gray);">✅ Auditoria via Azure AD (quem logou, quando)</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; color:var(--ms-orange);">📈 Para o Negócio</h3>
+        <div class="flow-steps">
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Redução de chamados de suporte</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Conformidade com LGPD / ISO 27001</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Atração de clientes corporativos (padrão de mercado)</div>
+          <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:13.5px; color:var(--ms-gray);">✅ Template reutilizável — deploy em horas</div>
+          <div style="padding:8px 0; font-size:13.5px; color:var(--ms-gray);">✅ Custo zero (scale-to-zero Cloud Run)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 5 — ARQUITETURA  ══════════════════════ -->
+<div class="slide" id="slide-arquitetura">
+  <div class="slide-header">
+    <div class="slide-number">Slide 04 · Estrutura Técnica</div>
+    <h2>Arquitetura do Projeto</h2>
+    <p>Componentes, responsabilidades e infraestrutura de produção</p>
+  </div>
+  <div class="slide-body">
+
+    <!-- Arch Diagram -->
+    <div class="diagram-wrapper" style="margin-bottom:24px;">
+      <svg width="100%" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Usuário -->
+        <rect x="10" y="80" width="130" height="80" rx="8" fill="#deecf9" stroke="#0078d4" stroke-width="1.5"/>
+        <text x="75" y="108" text-anchor="middle" font-size="22">👤</text>
+        <text x="75" y="128" text-anchor="middle" font-size="12" font-weight="600" fill="#005a9e">Usuário</text>
+        <text x="75" y="143" text-anchor="middle" font-size="10" fill="#605e5c">Navegador / Teams</text>
+
+        <!-- Arrow 1 -->
+        <line x1="140" y1="120" x2="190" y2="120" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="165" y="113" text-anchor="middle" font-size="9" fill="#605e5c">HTTPS</text>
+
+        <!-- App FastAPI -->
+        <rect x="190" y="50" width="160" height="140" rx="8" fill="#fff4ce" stroke="#d83b01" stroke-width="1.5"/>
+        <text x="270" y="80" text-anchor="middle" font-size="20">⚙️</text>
+        <text x="270" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#7a1d00">App FastAPI</text>
+        <text x="270" y="117" text-anchor="middle" font-size="10" fill="#605e5c">web_auth.py</text>
+        <text x="270" y="131" text-anchor="middle" font-size="10" fill="#605e5c">session.py</text>
+        <text x="270" y="145" text-anchor="middle" font-size="10" fill="#605e5c">pending.py</text>
+        <text x="270" y="159" text-anchor="middle" font-size="10" fill="#605e5c">main.py (middleware)</text>
+        <text x="270" y="178" text-anchor="middle" font-size="9" fill="#d83b01" font-weight="600">Cloud Run · us-central1</text>
+
+        <!-- Arrow 2 — Auth Request -->
+        <line x1="350" y1="100" x2="420" y2="100" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="385" y="93" text-anchor="middle" font-size="9" fill="#605e5c">Redireciona</text>
+        <text x="385" y="104" text-anchor="middle" font-size="8" fill="#888">OAuth2+PKCE</text>
+
+        <!-- Arrow 2b — Token response -->
+        <line x1="420" y1="140" x2="350" y2="140" stroke="#107c10" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <text x="385" y="157" text-anchor="middle" font-size="9" fill="#107c10">id_token</text>
+
+        <!-- Microsoft Identity -->
+        <rect x="420" y="50" width="170" height="140" rx="8" fill="#dff6dd" stroke="#107c10" stroke-width="1.5"/>
+        <text x="505" y="80" text-anchor="middle" font-size="20">🔐</text>
+        <text x="505" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#054b02">Microsoft</text>
+        <text x="505" y="118" text-anchor="middle" font-size="11" font-weight="600" fill="#054b02">Azure AD / Entra ID</text>
+        <text x="505" y="136" text-anchor="middle" font-size="10" fill="#605e5c">Autentica o usuário</text>
+        <text x="505" y="150" text-anchor="middle" font-size="10" fill="#605e5c">Assina o id_token</text>
+        <text x="505" y="164" text-anchor="middle" font-size="10" fill="#605e5c">Valida MFA se ativado</text>
+        <text x="505" y="178" text-anchor="middle" font-size="9" fill="#107c10" font-weight="600">login.microsoftonline.com</text>
+
+        <!-- Arrow 3 — Config -->
+        <line x1="590" y1="120" x2="660" y2="120" stroke="#605e5c" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr3)"/>
+        <text x="625" y="113" text-anchor="middle" font-size="9" fill="#605e5c">Secrets</text>
+
+        <!-- GCP -->
+        <rect x="660" y="50" width="160" height="140" rx="8" fill="#fde7e9" stroke="#c50f1f" stroke-width="1.5"/>
+        <text x="740" y="80" text-anchor="middle" font-size="20">☁️</text>
+        <text x="740" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#720e18">Google Cloud</text>
+        <text x="740" y="118" text-anchor="middle" font-size="11" font-weight="600" fill="#720e18">Secret Manager</text>
+        <text x="740" y="136" text-anchor="middle" font-size="10" fill="#605e5c">AZURE_APP_PASSWORD</text>
+        <text x="740" y="150" text-anchor="middle" font-size="10" fill="#605e5c">SECRET_KEY</text>
+        <text x="740" y="164" text-anchor="middle" font-size="10" fill="#605e5c">Versão 2 (ativa)</text>
+        <text x="740" y="178" text-anchor="middle" font-size="9" fill="#c50f1f" font-weight="600">sso-ik-microsoft</text>
+
+        <!-- Arrow 4 — Pending -->
+        <line x1="350" y1="165" x2="820" y2="165" stroke="#c50f1f" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="820" y1="165" x2="820" y2="100" stroke="#c50f1f" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="840" y="75" width="140" height="90" rx="6" fill="#fff" stroke="#c50f1f" stroke-width="1"/>
+        <text x="910" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#c50f1f">📋 Pendentes</text>
+        <text x="910" y="118" text-anchor="middle" font-size="10" fill="#605e5c">pending_tenants.json</text>
+        <text x="910" y="133" text-anchor="middle" font-size="10" fill="#605e5c">Empresas não</text>
+        <text x="910" y="147" text-anchor="middle" font-size="10" fill="#605e5c">autorizadas</text>
+
+        <!-- markers -->
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0078d4"/>
+          </marker>
+          <marker id="arr2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#107c10"/>
+          </marker>
+          <marker id="arr3" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#605e5c"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--ms-blue);">Arquivos do Core SSO</h3>
+        <table>
+          <thead><tr><th>Arquivo</th><th>Responsabilidade</th></tr></thead>
+          <tbody>
+            <tr><td><code>web_auth.py</code></td><td>Rotas OAuth2 + PKCE + validação JWT</td></tr>
+            <tr><td><code>session.py</code></td><td>Sessão server-side + cookie HMAC assinado</td></tr>
+            <tr><td><code>pending.py</code></td><td>Registro de acessos negados</td></tr>
+            <tr><td><code>config.py</code></td><td>Configuração via variáveis de ambiente</td></tr>
+            <tr><td><code>main.py</code></td><td>App + middleware de segurança HTTP</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; color:var(--ms-blue);">Rotas da Aplicação</h3>
+        <table>
+          <thead><tr><th>Rota</th><th>Função</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET /</code></td><td>Login ou página autenticada</td></tr>
+            <tr><td><code>GET /auth/login</code></td><td>Inicia fluxo → redireciona à Microsoft</td></tr>
+            <tr><td><code>GET /auth/callback</code></td><td>Recebe code, valida, cria sessão</td></tr>
+            <tr><td><code>GET /auth/logout</code></td><td>Destrói sessão + logout Microsoft</td></tr>
+            <tr><td><code>GET /health</code></td><td>Health check (load balancers)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 6 — FLUXO PRINCIPAL  ══════════════════════ -->
+<div class="slide" id="slide-fluxo">
+  <div class="slide-header">
+    <div class="slide-number">Slide 05 · Diagrama de Fluxo</div>
+    <h2>Fluxo Completo de Autenticação</h2>
+    <p>Passo a passo de como o OAuth 2.0 + PKCE funciona internamente</p>
+  </div>
+  <div class="slide-body">
+    <div class="diagram-wrapper">
+      <svg width="100%" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <defs>
+          <marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0078d4"/>
+          </marker>
+          <marker id="fa2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#107c10"/>
+          </marker>
+          <marker id="fa3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c50f1f"/>
+          </marker>
+        </defs>
+
+        <!-- Swimlane labels -->
+        <rect x="0" y="0" width="130" height="620" rx="0" fill="#f8f8f8"/>
+        <rect x="0" y="0" width="130" height="620" rx="0" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+
+        <rect x="130" y="0" width="220" height="620" fill="#deecf9" fill-opacity=".25"/>
+        <rect x="350" y="0" width="300" height="620" fill="#dff6dd" fill-opacity=".25"/>
+        <rect x="650" y="0" width="350" height="620" fill="#fff4ce" fill-opacity=".2"/>
+
+        <text x="240" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#0078d4">👤 USUÁRIO</text>
+        <text x="500" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#107c10">🔐 MICROSOFT</text>
+        <text x="800" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#d83b01">⚙️ APP FASTAPI</text>
+        <text x="65" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#605e5c">Etapa</text>
+
+        <!-- step 1 -->
+        <rect x="5" y="38" width="120" height="26" rx="4" fill="#0078d4"/>
+        <text x="65" y="55" text-anchor="middle" font-size="11" fill="white" font-weight="600">1. Login</text>
+        <rect x="155" y="38" width="175" height="40" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+        <text x="243" y="55" text-anchor="middle" font-size="12">🖱️ Clica "Entrar com Microsoft"</text>
+        <text x="243" y="70" text-anchor="middle" font-size="10" fill="#605e5c">GET /auth/login</text>
+        <line x1="330" y1="55" x2="665" y2="55" stroke="#0078d4" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#fa)"/>
+
+        <!-- step 2 -->
+        <rect x="5" y="98" width="120" height="26" rx="4" fill="#0078d4"/>
+        <text x="65" y="115" text-anchor="middle" font-size="11" fill="white" font-weight="600">2. PKCE + State</text>
+        <rect x="665" y="88" width="320" height="50" rx="6" fill="#fff4ce" stroke="#d83b01" stroke-width="1"/>
+        <text x="825" y="106" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1d00">App gera code_verifier (segredo)</text>
+        <text x="825" y="120" text-anchor="middle" font-size="10" fill="#605e5c">code_challenge = SHA256(verifier) · state CSRF · nonce</text>
+        <text x="825" y="133" text-anchor="middle" font-size="10" fill="#605e5c">Salva (verifier, nonce, timestamp) em memória</text>
+
+        <!-- step 3 -->
+        <rect x="5" y="160" width="120" height="26" rx="4" fill="#0078d4"/>
+        <text x="65" y="177" text-anchor="middle" font-size="11" fill="white" font-weight="600">3. Redirect</text>
+        <line x1="665" y1="170" x2="370" y2="170" stroke="#0078d4" stroke-width="1.5" marker-end="url(#fa)"/>
+        <text x="517" y="163" text-anchor="middle" font-size="10" fill="#605e5c">Redirect 302 → login.microsoftonline.com + code_challenge</text>
+        <rect x="155" y="158" width="185" height="30" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+        <text x="248" y="177" text-anchor="middle" font-size="11">🌐 Abre tela da Microsoft</text>
+
+        <!-- step 4 -->
+        <rect x="5" y="210" width="120" height="26" rx="4" fill="#107c10"/>
+        <text x="65" y="227" text-anchor="middle" font-size="11" fill="white" font-weight="600">4. Login M365</text>
+        <rect x="155" y="208" width="185" height="30" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+        <text x="248" y="227" text-anchor="middle" font-size="11">🔑 Digita senha corporativa</text>
+        <line x1="340" y1="222" x2="360" y2="222" stroke="#0078d4" stroke-width="1.5" marker-end="url(#fa)"/>
+        <rect x="360" y="210" width="280" height="36" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="1"/>
+        <text x="500" y="228" text-anchor="middle" font-size="11" font-weight="600" fill="#054b02">Microsoft valida credenciais + MFA</text>
+        <text x="500" y="241" text-anchor="middle" font-size="10" fill="#605e5c">Verifica account type: AzureADMultipleOrgs</text>
+
+        <!-- step 5 -->
+        <rect x="5" y="268" width="120" height="26" rx="4" fill="#107c10"/>
+        <text x="65" y="285" text-anchor="middle" font-size="11" fill="white" font-weight="600">5. Code</text>
+        <line x1="360" y1="280" x2="200" y2="280" stroke="#107c10" stroke-width="1.5" marker-end="url(#fa2)"/>
+        <text x="280" y="272" text-anchor="middle" font-size="10" fill="#605e5c">Redirect: /auth/callback?code=XXX&amp;state=YYY</text>
+        <line x1="340" y1="290" x2="665" y2="290" stroke="#107c10" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#fa2)"/>
+        <text x="503" y="303" text-anchor="middle" font-size="10" fill="#605e5c">App recebe code + state</text>
+
+        <!-- step 6 -->
+        <rect x="5" y="318" width="120" height="26" rx="4" fill="#d83b01"/>
+        <text x="65" y="335" text-anchor="middle" font-size="11" fill="white" font-weight="600">6. Troca Token</text>
+        <rect x="665" y="316" width="320" height="44" rx="6" fill="#fff4ce" stroke="#d83b01" stroke-width="1"/>
+        <text x="825" y="334" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1d00">Valida state + TTL 10min (CSRF)</text>
+        <text x="825" y="349" text-anchor="middle" font-size="10" fill="#605e5c">POST /token com code + code_verifier (server-side)</text>
+        <line x1="665" y1="338" x2="640" y2="338" stroke="#d83b01" stroke-width="1.5" marker-end="url(#fa3)"/>
+        <line x1="640" y1="338" x2="640" y2="360" stroke="#d83b01" stroke-width="1.5"/>
+        <line x1="640" y1="360" x2="360" y2="360" stroke="#107c10" stroke-width="1.5" marker-end="url(#fa2)"/>
+        <text x="503" y="353" text-anchor="middle" font-size="10" fill="#107c10">Microsoft devolve id_token assinado</text>
+
+        <!-- step 7 -->
+        <rect x="5" y="378" width="120" height="26" rx="4" fill="#d83b01"/>
+        <text x="65" y="395" text-anchor="middle" font-size="11" fill="white" font-weight="600">7. Valida JWT</text>
+        <rect x="665" y="376" width="320" height="54" rx="6" fill="#fff4ce" stroke="#d83b01" stroke-width="1"/>
+        <text x="825" y="394" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1d00">Valida id_token</text>
+        <text x="825" y="409" text-anchor="middle" font-size="10" fill="#605e5c">exp (expirado?) · aud (app correto?) · iss (Microsoft?)</text>
+        <text x="825" y="422" text-anchor="middle" font-size="10" fill="#605e5c">nonce (replay?) · tid (empresa autorizada?)</text>
+
+        <!-- step 8 -->
+        <rect x="5" y="450" width="120" height="26" rx="4" fill="#107c10"/>
+        <text x="65" y="467" text-anchor="middle" font-size="11" fill="white" font-weight="600">8. Sessão</text>
+        <rect x="665" y="448" width="320" height="44" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="1"/>
+        <text x="825" y="466" text-anchor="middle" font-size="11" font-weight="600" fill="#054b02">Cria sessão server-side (8h)</text>
+        <text x="825" y="481" text-anchor="middle" font-size="10" fill="#605e5c">Cookie HMAC-assinado: HttpOnly + SameSite + Secure</text>
+
+        <!-- step 9 -->
+        <rect x="5" y="514" width="120" height="26" rx="4" fill="#107c10"/>
+        <text x="65" y="531" text-anchor="middle" font-size="11" fill="white" font-weight="600">9. Acesso</text>
+        <line x1="665" y1="524" x2="370" y2="524" stroke="#107c10" stroke-width="1.5" marker-end="url(#fa2)"/>
+        <text x="517" y="515" text-anchor="middle" font-size="10" fill="#605e5c">Redirect 302 → /  (PRG pattern)</text>
+        <rect x="155" y="512" width="185" height="36" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="2"/>
+        <text x="248" y="530" text-anchor="middle" font-size="12" font-weight="700" fill="#054b02">✅ Autenticado!</text>
+        <text x="248" y="543" text-anchor="middle" font-size="10" fill="#605e5c">Sessão válida — sem novo login por 8h</text>
+
+        <!-- step 10 (visitas seguintes) -->
+        <rect x="5" y="566" width="120" height="26" rx="4" fill="#0078d4"/>
+        <text x="65" y="583" text-anchor="middle" font-size="11" fill="white" font-weight="600">10. Retorno</text>
+        <rect x="155" y="565" width="185" height="30" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+        <text x="248" y="584" text-anchor="middle" font-size="11">🔄 Visitas seguintes: entra direto</text>
+        <rect x="665" y="566" width="320" height="26" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+        <text x="825" y="583" text-anchor="middle" font-size="11" fill="#005a9e">Lê cookie → valida HMAC → verifica TTL → Olá, {nome}</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 7 — 3 CENÁRIOS  ══════════════════════ -->
+<div class="slide" id="slide-fluxos3">
+  <div class="slide-header">
+    <div class="slide-number">Slide 06 · Cenários Validados</div>
+    <h2>3 Fluxos Testados em Produção</h2>
+    <p>Todos os cenários foram validados na URL de produção em 31/05/2026</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3">
+
+      <!-- Fluxo 1 -->
+      <div style="border-radius:8px; overflow:hidden; border:1.5px solid #107c10;">
+        <div style="background:#107c10; padding:14px 18px;">
+          <div style="color:#fff; font-weight:700; font-size:15px;">✅ Fluxo 1 — Empresa Autorizada</div>
+          <div style="color:rgba(255,255,255,.8); font-size:12px; margin-top:2px;">Ex: @ik.com.br · @tegma.com.br</div>
+        </div>
+        <div style="padding:16px 18px; background:#fff;">
+          <div class="flow-steps">
+            <div class="flow-step" data-n="1">
+              <div><h4>Acessa o sistema</h4><p>Clica "Entrar com Microsoft"</p></div>
+            </div>
+            <div class="flow-step" data-n="2">
+              <div><h4>Tela da Microsoft</h4><p>Login com conta corporativa M365</p></div>
+            </div>
+            <div class="flow-step" data-n="3">
+              <div><h4>App recebe token</h4><p>Verifica tid na whitelist — encontrado</p></div>
+            </div>
+            <div class="flow-step allowed" data-n="4">
+              <div><h4>Sessão criada (8h)</h4><p>Cookie seguro gravado no navegador</p></div>
+            </div>
+          </div>
+          <div class="flow-outcome ok">✅ Acesso permitido · Sessão persiste 8h</div>
+        </div>
+      </div>
+
+      <!-- Fluxo 2 -->
+      <div style="border-radius:8px; overflow:hidden; border:1.5px solid #c50f1f;">
+        <div style="background:#c50f1f; padding:14px 18px;">
+          <div style="color:#fff; font-weight:700; font-size:15px;">🚫 Fluxo 2 — Conta Pessoal</div>
+          <div style="color:rgba(255,255,255,.8); font-size:12px; margin-top:2px;">Ex: @gmail.com · @hotmail.com</div>
+        </div>
+        <div style="padding:16px 18px; background:#fff;">
+          <div class="flow-steps">
+            <div class="flow-step" data-n="1">
+              <div><h4>Acessa o sistema</h4><p>Clica "Entrar com Microsoft"</p></div>
+            </div>
+            <div class="flow-step" data-n="2">
+              <div><h4>Tela da Microsoft</h4><p>Tenta entrar com conta pessoal</p></div>
+            </div>
+            <div class="flow-step denied" data-n="3">
+              <div><h4>Microsoft bloqueia</h4><p>signInAudience = AzureADMultipleOrgs rejeita contas MSA</p></div>
+            </div>
+          </div>
+          <div style="height:56px;"></div>
+          <div class="flow-outcome fail">🚫 Bloqueado pela Microsoft · App nem recebe o request</div>
+        </div>
+      </div>
+
+      <!-- Fluxo 3 -->
+      <div style="border-radius:8px; overflow:hidden; border:1.5px solid #d83b01;">
+        <div style="background:#d83b01; padding:14px 18px;">
+          <div style="color:#fff; font-weight:700; font-size:15px;">⚠️ Fluxo 3 — Empresa Não Cadastrada</div>
+          <div style="color:rgba(255,255,255,.8); font-size:12px; margin-top:2px;">Ex: empresa nova sem autorização</div>
+        </div>
+        <div style="padding:16px 18px; background:#fff;">
+          <div class="flow-steps">
+            <div class="flow-step" data-n="1">
+              <div><h4>Acessa o sistema</h4><p>Clica "Entrar com Microsoft"</p></div>
+            </div>
+            <div class="flow-step" data-n="2">
+              <div><h4>Microsoft autentica</h4><p>Login corporativo válido — empresa real</p></div>
+            </div>
+            <div class="flow-step" data-n="3">
+              <div><h4>App verifica tid</h4><p>Tenant ID NÃO está na whitelist</p></div>
+            </div>
+            <div class="flow-step denied" data-n="4">
+              <div><h4>Pedido registrado</h4><p>pending_tenants.json captura dados</p></div>
+            </div>
+          </div>
+          <div class="flow-outcome fail">⚠️ 403 "Sua empresa não tem acesso" · Admin notificado</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="callout success" style="margin-top:20px;">
+      <strong>Tenant Tegma aprovado em 31/05/2026:</strong> O Fluxo 3 foi validado com a empresa Tegma. Após adição do Tenant ID à whitelist, o acesso foi liberado sem nenhum restart de código.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 8 — SEGURANÇA  ══════════════════════ -->
+<div class="slide" id="slide-seguranca">
+  <div class="slide-header">
+    <div class="slide-number">Slide 07 · Modelo de Segurança</div>
+    <h2>Proteções Implementadas</h2>
+    <p>9 vulnerabilidades identificadas, corrigidas e validadas em produção</p>
+  </div>
+  <div class="slide-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Ataque / Vulnerabilidade</th>
+          <th>Proteção Implementada</th>
+          <th>Arquivo</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>XSS via dados do usuário</td><td><code>html.escape()</code> em todo conteúdo dinâmico</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Roubo de cookie por XSS</td><td>Flag <code>HttpOnly</code> no cookie de sessão</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>CSRF no fluxo OAuth</td><td>Parâmetro <code>state</code> validado no callback</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>CSRF na sessão web</td><td>Flag <code>SameSite=Lax</code> no cookie</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Interceptação do cookie (MITM)</td><td>Flag <code>Secure</code> — cookie só via HTTPS</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Replay de código OAuth</td><td>PKCE: <code>code_verifier / code_challenge</code></td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Replay de id_token</td><td><code>nonce</code> único por requisição, validado no callback</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Token de outra aplicação</td><td><code>aud</code> (audience) verificado no JWT</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Token expirado</td><td><code>exp</code> verificado no JWT</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Token de outro issuer</td><td><code>iss</code> verificado por tenant</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>DoS em /auth/login</td><td>TTL 10min + máx 200 estados simultâneos</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Clickjacking</td><td><code>X-Frame-Options: DENY</code> + CSP <code>frame-ancestors 'none'</code></td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Injeção de scripts</td><td>Content-Security-Policy restritivo</td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>MIME sniffing</td><td><code>X-Content-Type-Options: nosniff</code></td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Forjamento de session ID</td><td>HMAC-SHA1 com chave secreta (itsdangerous)</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Vazamento de dados na sessão</td><td>Sessão server-side — cookie é opaco (ID apenas)</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Leak de memória (sessões)</td><td>Limpeza automática de sessões expiradas</td><td>session.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>SSRF no endpoint do bot</td><td>Whitelist de domínios do Bot Framework</td><td>messages.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Exposição de schema da API</td><td><code>/docs</code> e <code>/openapi.json</code> desabilitados</td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Container executando como root</td><td><code>USER appuser</code> no Dockerfile</td><td>Dockerfile</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>HSTS bypass</td><td><code>Strict-Transport-Security</code> em HTTPS</td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 9 — CAMADAS DE SEGURANÇA  ══════════════════════ -->
+<div class="slide" id="slide-camadas">
+  <div class="slide-header">
+    <div class="slide-number">Slide 08 · Defense in Depth</div>
+    <h2>Camadas de Segurança</h2>
+    <p>Modelo de defesa em profundidade — múltiplas barreiras independentes</p>
+  </div>
+  <div class="slide-body">
+
+    <!-- Diagrama visual das camadas -->
+    <div class="diagram-wrapper" style="margin-bottom:24px; text-align:center; padding: 32px 24px;">
+      <svg width="100%" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+        <!-- Camada 6 - mais externa -->
+        <ellipse cx="400" cy="180" rx="390" ry="165" fill="#fde7e9" stroke="#c50f1f" stroke-width="1.5"/>
+        <text x="50" y="40" font-size="11" font-weight="700" fill="#c50f1f">6. INFRAESTRUTURA</text>
+        <text x="50" y="54" font-size="9" fill="#605e5c">HTTPS · HSTS · Cloud Run · Secret Manager</text>
+
+        <!-- Camada 5 -->
+        <ellipse cx="400" cy="188" rx="330" ry="140" fill="#fff4ce" stroke="#d83b01" stroke-width="1.5"/>
+        <text x="90" y="68" font-size="11" font-weight="700" fill="#d83b01">5. HEADERS HTTP</text>
+        <text x="90" y="82" font-size="9" fill="#605e5c">CSP · X-Frame-Options · nosniff · HSTS</text>
+
+        <!-- Camada 4 -->
+        <ellipse cx="400" cy="196" rx="268" ry="116" fill="#deecf9" stroke="#0078d4" stroke-width="1.5"/>
+        <text x="155" y="100" font-size="11" font-weight="700" fill="#0078d4">4. PROTOCOLO OAUTH</text>
+        <text x="155" y="114" font-size="9" fill="#605e5c">PKCE · state CSRF · nonce replay · TTL 10min</text>
+
+        <!-- Camada 3 -->
+        <ellipse cx="400" cy="204" rx="210" ry="94" fill="#dff6dd" stroke="#107c10" stroke-width="1.5"/>
+        <text x="213" y="133" font-size="11" font-weight="700" fill="#107c10">3. VALIDAÇÃO JWT</text>
+        <text x="213" y="147" font-size="9" fill="#605e5c">exp · aud · iss · nonce · tid whitelist</text>
+
+        <!-- Camada 2 -->
+        <ellipse cx="400" cy="212" rx="152" ry="72" fill="#deecf9" stroke="#005a9e" stroke-width="1.5"/>
+        <text x="270" y="167" font-size="11" font-weight="700" fill="#005a9e">2. SESSÃO SERVER-SIDE</text>
+        <text x="270" y="181" font-size="9" fill="#605e5c">HMAC · HttpOnly · SameSite · Secure</text>
+
+        <!-- Camada 1 - núcleo -->
+        <ellipse cx="400" cy="220" rx="95" ry="50" fill="#0078d4" stroke="#003a70" stroke-width="2"/>
+        <text x="400" y="212" text-anchor="middle" font-size="11" font-weight="700" fill="white">1. IDENTIDADE</text>
+        <text x="400" y="226" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Azure AD (Microsoft)</text>
+        <text x="400" y="239" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">MFA já incluso</text>
+
+        <!-- Labels direito -->
+        <text x="700" y="340" font-size="10" text-anchor="middle" fill="#605e5c" font-style="italic">← mais interno = mais crítico</text>
+      </svg>
+    </div>
+
+    <div class="layer-stack">
+      <div class="layer l1">
+        <div class="layer-label">🔑 Camada 1 — Identidade</div>
+        <div class="layer-items">Azure AD (Microsoft Entra ID) · MFA obrigatório pelo M365 · Conta corporativa verificada</div>
+      </div>
+      <div class="layer l2">
+        <div class="layer-label">🍪 Camada 2 — Sessão</div>
+        <div class="layer-items">HMAC-SHA1 (itsdangerous) · HttpOnly · SameSite=Lax · Secure em HTTPS · Expiração 8h · Cleanup automático</div>
+      </div>
+      <div class="layer l3">
+        <div class="layer-label">📜 Camada 3 — Token JWT</div>
+        <div class="layer-items">Valida: exp (expiração) · aud (audiência) · iss (issuer/Microsoft) · nonce (replay) · tid (empresa autorizada)</div>
+      </div>
+      <div class="layer l4">
+        <div class="layer-label">🔄 Camada 4 — Protocolo</div>
+        <div class="layer-items">PKCE (code_verifier/challenge) · state CSRF · TTL 10min · Máx 200 estados simultâneos</div>
+      </div>
+      <div class="layer l5">
+        <div class="layer-label">🌐 Camada 5 — Headers HTTP</div>
+        <div class="layer-items">Content-Security-Policy · X-Frame-Options: DENY · X-Content-Type-Options: nosniff · Referrer-Policy</div>
+      </div>
+      <div class="layer l6">
+        <div class="layer-label">☁️ Camada 6 — Infra</div>
+        <div class="layer-items">HTTPS obrigatório · HSTS · Secret Manager GCP · Container não-root · /docs desabilitado</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 10 — MULTI-EMPRESA  ══════════════════════ -->
+<div class="slide" id="slide-multitenancy">
+  <div class="slide-header">
+    <div class="slide-number">Slide 09 · Multi-empresa</div>
+    <h2>Controle de Acesso Multi-empresa</h2>
+    <p>Whitelist de Tenants — cada empresa tem seu próprio ID único no Azure</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div class="diagram-wrapper">
+          <svg width="100%" viewBox="0 0 440 360" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#605e5c"/>
+              </marker>
+              <marker id="ma2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#107c10"/>
+              </marker>
+              <marker id="ma3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#c50f1f"/>
+              </marker>
+            </defs>
+
+            <!-- Empresas -->
+            <rect x="10" y="40" width="130" height="44" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="1.5"/>
+            <text x="75" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#054b02">🏢 IK Inovação</text>
+            <text x="75" y="73" text-anchor="middle" font-size="10" fill="#605e5c">@ik.com.br · AUTORIZADO</text>
+
+            <rect x="10" y="105" width="130" height="44" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="1.5"/>
+            <text x="75" y="123" text-anchor="middle" font-size="12" font-weight="700" fill="#054b02">🏢 Tegma</text>
+            <text x="75" y="138" text-anchor="middle" font-size="10" fill="#605e5c">@tegma.com.br · AUTORIZADO</text>
+
+            <rect x="10" y="170" width="130" height="44" rx="6" fill="#fff4ce" stroke="#d83b01" stroke-width="1.5"/>
+            <text x="75" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#7a1d00">🏢 Empresa Nova</text>
+            <text x="75" y="203" text-anchor="middle" font-size="10" fill="#605e5c">@nova.com.br · PENDENTE</text>
+
+            <rect x="10" y="235" width="130" height="44" rx="6" fill="#fde7e9" stroke="#c50f1f" stroke-width="1.5"/>
+            <text x="75" y="253" text-anchor="middle" font-size="12" font-weight="700" fill="#720e18">❌ Gmail</text>
+            <text x="75" y="268" text-anchor="middle" font-size="10" fill="#605e5c">@gmail.com · BLOQUEADO</text>
+
+            <!-- Linhas para App -->
+            <line x1="140" y1="62" x2="185" y2="160" stroke="#107c10" stroke-width="1.5" marker-end="url(#ma2)"/>
+            <line x1="140" y1="127" x2="185" y2="165" stroke="#107c10" stroke-width="1.5" marker-end="url(#ma2)"/>
+            <line x1="140" y1="192" x2="185" y2="175" stroke="#d83b01" stroke-width="1.5" marker-end="url(#ma)"/>
+            <line x1="140" y1="257" x2="185" y2="185" stroke="#c50f1f" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ma3)"/>
+
+            <!-- App (Whitelist) -->
+            <rect x="185" y="120" width="120" height="100" rx="8" fill="#deecf9" stroke="#0078d4" stroke-width="2"/>
+            <text x="245" y="145" text-anchor="middle" font-size="11" font-weight="700" fill="#005a9e">🔒 Whitelist</text>
+            <text x="245" y="162" text-anchor="middle" font-size="10" fill="#605e5c">IK Inovação ✓</text>
+            <text x="245" y="176" text-anchor="middle" font-size="10" fill="#605e5c">Tegma ✓</text>
+            <text x="245" y="190" text-anchor="middle" font-size="10" fill="#605e5c">...</text>
+            <text x="245" y="207" text-anchor="middle" font-size="10" fill="#605e5c">Configurável</text>
+
+            <!-- Saídas -->
+            <line x1="305" y1="155" x2="360" y2="115" stroke="#107c10" stroke-width="1.5" marker-end="url(#ma2)"/>
+            <rect x="360" y="90" width="70" height="50" rx="6" fill="#dff6dd" stroke="#107c10" stroke-width="1.5"/>
+            <text x="395" y="111" text-anchor="middle" font-size="11" font-weight="700" fill="#054b02">✅ Acesso</text>
+            <text x="395" y="126" text-anchor="middle" font-size="10" fill="#605e5c">Sessão 8h</text>
+
+            <line x1="305" y1="180" x2="360" y2="195" stroke="#d83b01" stroke-width="1.5" marker-end="url(#ma)"/>
+            <rect x="360" y="170" width="70" height="50" rx="6" fill="#fff4ce" stroke="#d83b01" stroke-width="1.5"/>
+            <text x="395" y="191" text-anchor="middle" font-size="11" font-weight="700" fill="#7a1d00">📋 Pendente</text>
+            <text x="395" y="206" text-anchor="middle" font-size="10" fill="#605e5c">Registrado</text>
+
+            <line x1="185" y1="257" x2="360" y2="280" stroke="#c50f1f" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#ma3)"/>
+            <rect x="360" y="258" width="70" height="44" rx="6" fill="#fde7e9" stroke="#c50f1f" stroke-width="1.5"/>
+            <text x="395" y="276" text-anchor="middle" font-size="11" font-weight="700" fill="#720e18">🚫 Block</text>
+            <text x="395" y="291" text-anchor="middle" font-size="10" fill="#605e5c">Pela Microsoft</text>
+
+            <!-- Nota: sem restart -->
+            <rect x="10" y="295" width="420" height="52" rx="6" fill="#deecf9" stroke="#0078d4" stroke-width="1"/>
+            <text x="220" y="315" text-anchor="middle" font-size="11" font-weight="600" fill="#005a9e">💡 Adicionar empresa: edite .env + reinicie (sem alteração de código)</text>
+            <text x="220" y="332" text-anchor="middle" font-size="10" fill="#605e5c">O Tenant ID é capturado automaticamente nas tentativas de acesso negadas</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:14px;">Tenants Autorizados (Hoje)</h3>
+        <table style="margin-bottom:20px;">
+          <thead><tr><th>Empresa</th><th>Domínio</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>IK ECOSSISTEMA DA INOVAÇÃO</strong></td>
+              <td>@ik.com.br</td>
+              <td><span class="pill green">Principal</span></td>
+            </tr>
+            <tr>
+              <td><strong>Tegma</strong></td>
+              <td>@tegma.com.br</td>
+              <td><span class="pill green">Aprovado 31/05</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:10px;">Como aprovar uma nova empresa</h3>
+        <div class="flow-steps" style="margin-bottom:16px;">
+          <div class="flow-step" data-n="1">
+            <div><h4>Admin recebe notificação</h4><p>Empresa tentou acessar → registrado automaticamente</p></div>
+          </div>
+          <div class="flow-step" data-n="2">
+            <div><h4>Visualiza pedido</h4><p><code>python scripts/list_pending.py</code> mostra empresa e Tenant ID</p></div>
+          </div>
+          <div class="flow-step" data-n="3">
+            <div><h4>Aprova em uma linha</h4><p>Adiciona Tenant ID ao <code>.env</code> + reinicia o serviço</p></div>
+          </div>
+          <div class="flow-step allowed" data-n="4">
+            <div><h4>Empresa consegue acessar</h4><p>Na próxima tentativa de login, acesso liberado</p></div>
+          </div>
+        </div>
+        <div class="callout info">
+          <strong>Zero burocracia:</strong> O Tenant ID é capturado automaticamente quando a empresa tenta o primeiro acesso. Você nunca precisa pedir o ID para o cliente manualmente.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 11 — PRODUÇÃO  ══════════════════════ -->
+<div class="slide" id="slide-producao">
+  <div class="slide-header">
+    <div class="slide-number">Slide 10 · Produção</div>
+    <h2>Ambiente de Produção</h2>
+    <p>Validado e disponível publicamente desde 31/05/2026</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div style="background:linear-gradient(135deg, #0078d4, #005a9e); border-radius:8px; padding:24px; color:#fff; margin-bottom:16px;">
+          <div style="font-size:13px; font-weight:600; opacity:.8; margin-bottom:6px;">URL PÚBLICA DE PRODUÇÃO</div>
+          <div style="font-size:15px; font-weight:700; word-break:break-all;">https://sso-app-105965700502.us-central1.run.app</div>
+          <div style="font-size:12px; opacity:.8; margin-top:8px;">URL permanente — nunca muda mesmo após novos deploys</div>
+        </div>
+        <div class="grid-2" style="gap:10px; margin-bottom:16px;">
+          <div class="stat-box"><div class="num" style="font-size:28px;">GCP</div><div class="label">Google Cloud Run</div></div>
+          <div class="stat-box"><div class="num" style="font-size:28px;">$0</div><div class="label">Custo em repouso (scale-to-zero)</div></div>
+        </div>
+        <table>
+          <thead><tr><th>Recurso</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Projeto GCP</td><td>sso-ik-microsoft</td></tr>
+            <tr><td>Região</td><td>us-central1</td></tr>
+            <tr><td>Memória</td><td>256 MB</td></tr>
+            <tr><td>CPU</td><td>1 vCPU</td></tr>
+            <tr><td>Instâncias</td><td>0–3 (automático)</td></tr>
+            <tr><td>Secrets</td><td>Secret Manager (versão 2)</td></tr>
+            <tr><td>Imagem</td><td>Artifact Registry · us-central1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">Pipeline de Deploy</h3>
+        <div class="flow-steps" style="margin-bottom:16px;">
+          <div class="flow-step" data-n="1">
+            <div><h4>Código no GitHub</h4><p>Repositório privado · xelias882x/sso-microsoft-template</p></div>
+          </div>
+          <div class="flow-step" data-n="2">
+            <div><h4>Cloud Build</h4><p>Build da imagem Docker na nuvem (sem Docker local)</p></div>
+          </div>
+          <div class="flow-step" data-n="3">
+            <div><h4>Artifact Registry</h4><p>Imagem armazenada no repositório privado GCP</p></div>
+          </div>
+          <div class="flow-step allowed" data-n="4">
+            <div><h4>Cloud Run</h4><p>Deploy automático · URL permanente · Scale-to-zero</p></div>
+          </div>
+        </div>
+        <div class="callout success">
+          <strong>Tempo de deploy:</strong> Aproximadamente 3–5 minutos do commit ao ar. Sem interrupção de serviço durante o deploy (rolling update).
+        </div>
+        <div class="callout warning" style="margin-top:12px;">
+          <strong>Próximo vencimento:</strong> Client Secret expira ~Novembro/2026. Criar novo secret no Azure e atualizar o Secret Manager antes desta data.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════  SLIDE 12 — PRÓXIMOS PASSOS  ══════════════════════ -->
+<div class="slide" id="slide-proximos">
+  <div class="slide-header">
+    <div class="slide-number">Slide 11 · Roadmap</div>
+    <h2>Próximos Passos</h2>
+    <p>Evoluções planejadas e oportunidades de expansão</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="card" style="border-top-color: var(--ms-orange);">
+        <span class="icon">🔔</span>
+        <h3>Notificação Automática</h3>
+        <p>Alertar o administrador por email/Teams quando uma nova empresa solicitar acesso. Hoje o admin precisa executar o script manualmente.</p>
+        <br><span class="pill orange">Curto prazo</span>
+      </div>
+      <div class="card" style="border-top-color: var(--ms-blue);">
+        <span class="icon">🤖</span>
+        <h3>Bot Teams SSO Modo 2</h3>
+        <p>Integração OAuth Connection para o bot chamar a Microsoft Graph API em nome do usuário — acesso a dados de calendário, emails e perfil.</p>
+        <br><span class="pill blue">Médio prazo</span>
+      </div>
+      <div class="card green">
+        <span class="icon">⚡</span>
+        <h3>Redis para Sessões</h3>
+        <p>Substituir o armazenamento in-memory por Redis para suportar múltiplos workers e garantir persistência de sessão em restarts.</p>
+        <br><span class="pill green">Escala</span>
+      </div>
+      <div class="card">
+        <span class="icon">📊</span>
+        <h3>Dashboard Administrativo</h3>
+        <p>Interface web para gerenciar tenants autorizados, visualizar pedidos pendentes e aprovar empresas sem editar arquivos.</p>
+        <br><span class="pill blue">UX</span>
+      </div>
+      <div class="card">
+        <span class="icon">🔄</span>
+        <h3>Integração em Novos Apps</h3>
+        <p>O template está production-ready. Pode ser copiado e integrado em qualquer app FastAPI, Django ou Node.js em poucas horas.</p>
+        <br><span class="pill green">Disponível agora</span>
+      </div>
+      <div class="card">
+        <span class="icon">📋</span>
+        <h3>Rate Limiting</h3>
+        <p>Implementar limite de requisições via nginx ou proxy reverso para proteção adicional contra força bruta e abuso da API.</p>
+        <br><span class="pill orange">Segurança</span>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <strong>Template reutilizável — disponível agora:</strong> Toda a estrutura de SSO está empacotada e documentada. Um novo projeto pode ser integrado em horas, não semanas. O SSO-GUIDE.md cobre FastAPI, Django e Node.js/Express.
+    </div>
+
+    <!-- Slide final resumo -->
+    <div style="margin-top:24px; background:linear-gradient(135deg, var(--ms-blue-dark) 0%, var(--ms-blue) 100%); border-radius:8px; padding:28px 32px; color:#fff;">
+      <div style="font-size:20px; font-weight:700; margin-bottom:12px;">Resumo Executivo</div>
+      <div class="grid-4" style="gap:16px;">
+        <div style="text-align:center;">
+          <div style="font-size:32px; font-weight:700;">3</div>
+          <div style="font-size:12px; opacity:.8;">Fluxos validados em produção</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:32px; font-weight:700;">21</div>
+          <div style="font-size:12px; opacity:.8;">Proteções de segurança implementadas</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:32px; font-weight:700;">2</div>
+          <div style="font-size:12px; opacity:.8;">Empresas autorizadas (escalável)</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:32px; font-weight:700;">$0</div>
+          <div style="font-size:12px; opacity:.8;">Custo de infra em repouso</div>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.2); font-size:13px; opacity:.85;">
+        O projeto SSO Microsoft é um template production-ready que resolve autenticação corporativa com segurança enterprise, controle multi-empresa e custo zero em repouso. Pronto para ser integrado em qualquer sistema da IK.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rodapé -->
+<div style="max-width:var(--slide-max); margin:12px auto 40px; text-align:center; color:#aaa; font-size:12px;">
+  IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; SSO Microsoft Template &nbsp;·&nbsp; Validado em 31/05/2026 &nbsp;·&nbsp; Microsoft Identity Platform v2.0
+</div>
+
+</body>
+</html>
