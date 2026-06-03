@@ -309,7 +309,7 @@
       <div>
         <h1><strong>SSO Microsoft</strong>Autenticação Corporativa Segura</h1>
         <p class="subtitle">Login único com conta Microsoft — sem senhas adicionais, sem riscos</p>
-        <div class="badge">✅ 3 fluxos validados em produção — Fluxo 3 confirmado com Tegma em 03/06/2026</div>
+        <div class="badge">✅ 3 fluxos validados · 23 proteções de segurança · Revisão sso-app-00014-xqz — 03/06/2026</div>
         <p class="meta">IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; Apresentação Técnica Executiva</p>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px; text-align:right;">
@@ -452,7 +452,7 @@
         <div class="label">Duração da sessão sem novo login</div>
       </div>
       <div class="stat-box">
-        <div class="num">21</div>
+        <div class="num">23</div>
         <div class="label">Proteções de segurança implementadas</div>
       </div>
       <div class="stat-box">
@@ -745,7 +745,7 @@
   <div class="slide-header">
     <div class="slide-number">Slide 06 · Cenários Validados</div>
     <h2>3 Fluxos Testados em Produção</h2>
-    <p>Todos os cenários foram validados na URL de produção em 31/05/2026</p>
+    <p>Todos os cenários validados em produção — última revisão: sso-app-00014-xqz (03/06/2026)</p>
   </div>
   <div class="slide-body">
     <div class="grid-3">
@@ -825,7 +825,8 @@
 
     </div>
     <div class="callout success" style="margin-top:20px;">
-      <strong>Fluxo 3 validado com usuário real em 03/06/2026:</strong> <code>gustavo.ik@tegma.com.br</code> autenticou com sucesso. Evento <code>login_success</code> com tenant_id Tegma registrado no GCP Logging. Tenant aprovado desde 31/05/2026.
+      <strong>Fluxo 1 validado:</strong> <code>gustavo.ik@tegma.com.br</code>, <code>elias.silva@ik.com.br</code> e outros → <code>login_success</code> registrado no GCP Logging. &nbsp;|&nbsp;
+      <strong>Fluxo 3 revalidado em 03/06/2026:</strong> <code>servicedesk.myralis@myralis.com.br</code> → <code>login_denied</code> + pedido gravado + <code>notification_sent</code> — sem erros (revisão sso-app-00014-xqz).
     </div>
   </div>
 </div>
@@ -835,7 +836,7 @@
   <div class="slide-header">
     <div class="slide-number">Slide 07 · Modelo de Segurança</div>
     <h2>Proteções Implementadas</h2>
-    <p>21 proteções implementadas — protocolo OAuth, JWT, sessão, headers, infra e rate limiting</p>
+    <p>23 proteções implementadas — protocolo OAuth, JWT + assinatura JWKS, sessão, headers, infra, rate limiting e Bot Framework</p>
   </div>
   <div class="slide-body">
     <table>
@@ -869,6 +870,8 @@
         <tr><td>Exposição de schema da API</td><td><code>/docs</code> e <code>/openapi.json</code> desabilitados</td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
         <tr><td>Container executando como root</td><td><code>USER appuser</code> no Dockerfile</td><td>Dockerfile</td><td><span class="pill green">✓ Corrigido</span></td></tr>
         <tr><td>HSTS bypass</td><td><code>Strict-Transport-Security</code> em HTTPS</td><td>main.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>id_token forjado (CRIT-002)</td><td>Assinatura criptográfica verificada via JWKS — RS256, chave pública Microsoft (<code>PyJWKClient</code>)</td><td>web_auth.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
+        <tr><td>Request forjado ao bot (CRIT-001)</td><td>JWT Bearer do Bot Framework validado em <code>/api/messages</code> — RS256, issuer <code>api.botframework.com</code></td><td>messages.py</td><td><span class="pill green">✓ Corrigido</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -1076,7 +1079,7 @@
   <div class="slide-header">
     <div class="slide-number">Slide 10 · Produção</div>
     <h2>Ambiente de Produção</h2>
-    <p>Validado e disponível publicamente desde 31/05/2026</p>
+    <p>Revisão ativa: <strong>sso-app-00014-xqz</strong> · Online desde 31/05/2026 · Última atualização: 03/06/2026</p>
   </div>
   <div class="slide-body">
     <div class="grid-2" style="align-items:start;">
@@ -1179,8 +1182,14 @@
         <br><span class="pill green">✅ Implementado</span>
       </div>
     </div>
-    <div class="callout success">
-      <strong>Fluxo 3 validado com usuário real:</strong> <code>gustavo.ik@tegma.com.br</code> autenticou com sucesso em 03/06/2026. Evento <code>login_success</code> registrado no GCP Logging com tenant_id Tegma — todos os 3 fluxos confirmados em produção com usuários reais.
+    <div class="card green" style="margin-top:0;">
+      <span class="icon">🔐</span>
+      <h3>Auditoria de Segurança (CRIT-001 / CRIT-002 / HIGH-001)</h3>
+      <p>Verificação de assinatura criptográfica do id_token via JWKS (RS256) · JWT do Bot Framework validado em <code>/api/messages</code> · <code>store.py</code> com backend Redis-ready para multi-instância. Total: 23 proteções.</p>
+      <br><span class="pill green">✅ 03/06/2026</span>
+    </div>
+    <div class="callout success" style="margin-top:16px;">
+      <strong>Fluxo 3 revalidado (03/06/2026):</strong> <code>servicedesk.myralis@myralis.com.br</code> → <code>login_denied</code> + pedido gravado em <code>/data/</code> + <code>notification_sent</code> — fix do PermissionError confirmado em produção (revisão sso-app-00014-xqz). Todos os 3 fluxos validados com usuários reais.
     </div>
   </div>
 </div>
@@ -1245,7 +1254,7 @@
           <div style="font-size:12px; opacity:.8;">Fluxos validados em produção</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-size:32px; font-weight:700;">21</div>
+          <div style="font-size:32px; font-weight:700;">23</div>
           <div style="font-size:12px; opacity:.8;">Proteções de segurança implementadas</div>
         </div>
         <div style="text-align:center;">
