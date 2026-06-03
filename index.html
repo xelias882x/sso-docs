@@ -298,6 +298,7 @@
   <a href="#slide-camadas">Camadas</a>
   <a href="#slide-multitenancy">Multi-empresa</a>
   <a href="#slide-producao">Produção</a>
+  <a href="#slide-evolucao">Evoluções</a>
   <a href="#slide-proximos">Próximos Passos</a>
 </nav>
 
@@ -308,7 +309,7 @@
       <div>
         <h1><strong>SSO Microsoft</strong>Autenticação Corporativa Segura</h1>
         <p class="subtitle">Login único com conta Microsoft — sem senhas adicionais, sem riscos</p>
-        <div class="badge">✅ Validado em produção — 31/05/2026</div>
+        <div class="badge">✅ 3 fluxos validados em produção — Fluxo 3 confirmado com Tegma em 03/06/2026</div>
         <p class="meta">IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; Apresentação Técnica Executiva</p>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px; text-align:right;">
@@ -451,8 +452,8 @@
         <div class="label">Duração da sessão sem novo login</div>
       </div>
       <div class="stat-box">
-        <div class="num">9</div>
-        <div class="label">Vulnerabilidades corrigidas e validadas</div>
+        <div class="num">21</div>
+        <div class="label">Proteções de segurança implementadas</div>
       </div>
       <div class="stat-box">
         <div class="num">3</div>
@@ -592,6 +593,7 @@
             <tr><td><code>web_auth.py</code></td><td>Rotas OAuth2 + PKCE + validação JWT</td></tr>
             <tr><td><code>session.py</code></td><td>Sessão server-side + cookie HMAC assinado</td></tr>
             <tr><td><code>pending.py</code></td><td>Registro de acessos negados</td></tr>
+            <tr><td><code>notifier.py</code></td><td>Notificação por email ao admin</td></tr>
             <tr><td><code>config.py</code></td><td>Configuração via variáveis de ambiente</td></tr>
             <tr><td><code>main.py</code></td><td>App + middleware de segurança HTTP</td></tr>
           </tbody>
@@ -823,7 +825,7 @@
 
     </div>
     <div class="callout success" style="margin-top:20px;">
-      <strong>Tenant Tegma aprovado em 31/05/2026:</strong> O Fluxo 3 foi validado com a empresa Tegma. Após adição do Tenant ID à whitelist, o acesso foi liberado sem nenhum restart de código.
+      <strong>Fluxo 3 validado com usuário real em 03/06/2026:</strong> <code>gustavo.ik@tegma.com.br</code> autenticou com sucesso. Evento <code>login_success</code> com tenant_id Tegma registrado no GCP Logging. Tenant aprovado desde 31/05/2026.
     </div>
   </div>
 </div>
@@ -833,7 +835,7 @@
   <div class="slide-header">
     <div class="slide-number">Slide 07 · Modelo de Segurança</div>
     <h2>Proteções Implementadas</h2>
-    <p>9 vulnerabilidades identificadas, corrigidas e validadas em produção</p>
+    <p>21 proteções implementadas — protocolo OAuth, JWT, sessão, headers, infra e rate limiting</p>
   </div>
   <div class="slide-body">
     <table>
@@ -1096,7 +1098,10 @@
             <tr><td>Memória</td><td>256 MB</td></tr>
             <tr><td>CPU</td><td>1 vCPU</td></tr>
             <tr><td>Instâncias</td><td>0–3 (automático)</td></tr>
-            <tr><td>Secrets</td><td>Secret Manager (versão 2)</td></tr>
+            <tr><td>Secrets</td><td>Secret Manager — 6 secrets montados como arquivos em <code>/run/secrets/</code></td></tr>
+            <tr><td>Labels GCP</td><td>environment=production · team=ik · project=sso-microsoft</td></tr>
+            <tr><td>Build context</td><td>.gcloudignore — ~47 KB por build (antes: ~251 KB)</td></tr>
+            <tr><td>Dashboard</td><td>Cloud Monitoring — infra/dashboard-sso.json</td></tr>
             <tr><td>Imagem</td><td>Artifact Registry · us-central1</td></tr>
           </tbody>
         </table>
@@ -1128,6 +1133,58 @@
   </div>
 </div>
 
+<!-- ══════════════════════  SLIDE — EVOLUÇÕES DO PROJETO  ══════════════════════ -->
+<div class="slide" id="slide-evolucao">
+  <div class="slide-header">
+    <div class="slide-number">Slide 10b · Melhorias</div>
+    <h2>Evoluções Implementadas</h2>
+    <p>Funcionalidades adicionadas após a validação inicial em 31/05/2026</p>
+  </div>
+  <div class="slide-body">
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="card green">
+        <span class="icon">📧</span>
+        <h3>Notificação por Email</h3>
+        <p>Admin recebe email automático via Gmail SMTP quando nova empresa tenta acessar. Sem precisar executar script manualmente.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+      <div class="card green">
+        <span class="icon">🚦</span>
+        <h3>Rate Limit por IP</h3>
+        <p>Máximo 10 tentativas de login por IP em janela de 10 minutos. Proteção contra força bruta e automação maliciosa.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+      <div class="card green">
+        <span class="icon">📊</span>
+        <h3>Logs Estruturados JSON</h3>
+        <p>Eventos <code>login_success</code>, <code>login_denied</code> e <code>login_started</code> com <code>tenant_id</code> e <code>user_email</code> no GCP Logging. Validado em produção.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+      <div class="card green">
+        <span class="icon">🔒</span>
+        <h3>Secrets como Arquivos</h3>
+        <p>6 secrets migrados de variáveis de ambiente para arquivos montados em <code>/run/secrets/</code>. Invisíveis em dumps de processo — maior isolamento.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+      <div class="card green">
+        <span class="icon">🏷️</span>
+        <h3>Labels GCP + .gcloudignore</h3>
+        <p>Labels <code>environment=production · team=ik</code> para organização de custos. Build context reduzido de 251KB para 47KB com .gcloudignore.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+      <div class="card green">
+        <span class="icon">📈</span>
+        <h3>Dashboard Cloud Monitoring</h3>
+        <p>Painel GCP com métricas de requisições, latência e erros em tempo real. Configuração em <code>infra/dashboard-sso.json</code>.</p>
+        <br><span class="pill green">✅ Implementado</span>
+      </div>
+    </div>
+    <div class="callout success">
+      <strong>Fluxo 3 validado com usuário real:</strong> <code>gustavo.ik@tegma.com.br</code> autenticou com sucesso em 03/06/2026. Evento <code>login_success</code> registrado no GCP Logging com tenant_id Tegma — todos os 3 fluxos confirmados em produção com usuários reais.
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════  SLIDE 12 — PRÓXIMOS PASSOS  ══════════════════════ -->
 <div class="slide" id="slide-proximos">
   <div class="slide-header">
@@ -1140,8 +1197,8 @@
       <div class="card" style="border-top-color: var(--ms-orange);">
         <span class="icon">🔔</span>
         <h3>Notificação Automática</h3>
-        <p>Alertar o administrador por email/Teams quando uma nova empresa solicitar acesso. Hoje o admin precisa executar o script manualmente.</p>
-        <br><span class="pill orange">Curto prazo</span>
+        <p>Admin recebe email automático via Gmail SMTP quando nova empresa tenta acessar. Implementado em notifier.py.</p>
+        <br><span class="pill green">✅ Implementado</span>
       </div>
       <div class="card" style="border-top-color: var(--ms-blue);">
         <span class="icon">🤖</span>
@@ -1170,8 +1227,8 @@
       <div class="card">
         <span class="icon">📋</span>
         <h3>Rate Limiting</h3>
-        <p>Implementar limite de requisições via nginx ou proxy reverso para proteção adicional contra força bruta e abuso da API.</p>
-        <br><span class="pill orange">Segurança</span>
+        <p>Rate limit por IP implementado em /auth/login (10/IP/10min). Para rotas gerais, adicionar nginx/proxy reverso.</p>
+        <br><span class="pill green">✅ Implementado</span>
       </div>
     </div>
 
@@ -1209,7 +1266,7 @@
 
 <!-- Rodapé -->
 <div style="max-width:var(--slide-max); margin:12px auto 40px; text-align:center; color:#aaa; font-size:12px;">
-  IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; SSO Microsoft Template &nbsp;·&nbsp; Validado em 31/05/2026 &nbsp;·&nbsp; Microsoft Identity Platform v2.0
+  IK ECOSSISTEMA DA INOVAÇÃO LTDA &nbsp;·&nbsp; SSO Microsoft Template &nbsp;·&nbsp; Última atualização: 03/06/2026 &nbsp;·&nbsp; Microsoft Identity Platform v2.0
 </div>
 
 </body>
